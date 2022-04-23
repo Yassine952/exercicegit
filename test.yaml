@@ -1,0 +1,10 @@
+name: nginx-server
+on: push
+jobs:
+  exercice:
+    runs-on: ubuntu-latest
+    steps:
+      - run: docker run -d -p 8080:80 nginx
+      - run: curl localhost:8080
+      - run: docker container stop 553c1ae0e9ec
+      
