@@ -1,10 +1,32 @@
-name: nginx-server
-on: push
+name: Test
+
+# tester toutes les versions de NGINX (en utilisant une matrice)
+
+on:
+  push:
+    branches:
+      - development
+
 jobs:
-  exercice:
-    runs-on: ubuntu-latest
+  test:
+    name: test des versions de nginx
+    runs-on: ${{ matrix.operating_system }}
+    
+    strategy:
+      matrix:
+        nginx: 
+          - 1.21.01
+          - 1.20.02
+          
+        
+
     steps:
-      - run: docker run -d -p 8080:80 nginx
-      - run: curl localhost:8080
-      - run: docker container stop 553c1ae0e9ec
+      - name: Pull
+        run: docker pull nginx:1.21.6-alpine
+      - name: Run
+        run: docker run --detach --publish 80:80 --name nginx nginx
+      - name: HTTP Request
+        run: curl http://localhost
+      - name: Stop
+        run: docker stop nginx
       
